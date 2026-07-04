@@ -11421,8 +11421,16 @@
     GH_TOKEN: githubToken,
     WAKATIME_API_KEY: wakatimeApiKey
   } = process.env;
+  if (!githubToken) {
+    console.error("FATAL: GH_TOKEN is not set");
+  } else {
+    const e = githubToken.substring(0, 10);
+    console.log(
+      `GH_TOKEN present, length=${githubToken.length}, prefix="${e}..."`
+    );
+  }
   const wakatime = new WakaTimeClient(wakatimeApiKey);
-  const octokit = new Octokit({ auth: `token ${githubToken}` });
+  const octokit = new Octokit({ auth: githubToken });
   async function main() {
     const e = await wakatime.getMyStats({ range: RANGE.LAST_7_DAYS });
     await updateGist(e);

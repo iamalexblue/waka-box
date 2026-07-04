@@ -8,9 +8,19 @@ const {
   WAKATIME_API_KEY: wakatimeApiKey
 } = process.env;
 
+// Diagnostic: log masked token info
+if (!githubToken) {
+  console.error("FATAL: GH_TOKEN is not set");
+} else {
+  const prefix = githubToken.substring(0, 10);
+  console.log(
+    `GH_TOKEN present, length=${githubToken.length}, prefix="${prefix}..."`
+  );
+}
+
 const wakatime = new WakaTimeClient(wakatimeApiKey);
 
-const octokit = new Octokit({ auth: `token ${githubToken}` });
+const octokit = new Octokit({ auth: githubToken });
 
 async function main() {
   const stats = await wakatime.getMyStats({ range: RANGE.LAST_7_DAYS });
